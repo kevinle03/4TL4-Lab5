@@ -24,7 +24,7 @@ for M = M_values
     n = 0:N-1;
     h = h_id(1:N); % truncation (rectangular window)
     figure;
-    stem(n,abs(h));
+    stem(n,h);
     xlabel('Time Index')
     ylabel('Impulse Response')
     title(['Impulse Response of the Designed Filter (M = ' num2str(M) ')'])
@@ -52,6 +52,11 @@ for M = M_values
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using conv() (M = ' num2str(M) ')'])
+    figure;
+    plot(0:length(h_noise)-1,h_noise);
+    xlabel('Time Index')
+    ylabel('Amplitude')
+    title(['Time Response of Noise After Filter Using conv() (M = ' num2str(M) ')'])
     % filter noise using filter()
     h_noise = filter(h, 1, noise);
     H_noise = fft(h_noise, num_samples);
@@ -60,6 +65,11 @@ for M = M_values
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using filter() (M = ' num2str(M) ')'])
+    figure;
+    plot(0:length(h_noise)-1,h_noise);
+    xlabel('Time Index')
+    ylabel('Amplitude')
+    title(['Time Response of Noise After Filter Using filter() (M = ' num2str(M) ')'])
 end
 %%  (e)
  

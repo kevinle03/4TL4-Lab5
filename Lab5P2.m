@@ -36,14 +36,14 @@ freqz(h, 1, 2048)
 title("Frequency Response of M_1 100 Sidelobe Attenuation");
 hold off;
 
-che = chebwin(M_1+1,1000);%needs to be 1 larger to have same length
+che = chebwin(M_1+1,50);%needs to be 1 larger to have same length
 
 h = fir1(M_1,w_n,"low",che);
 
 hold on;
 figure(3)
 freqz(h, 1, 2048);
-title("Frequency Response of M_1 at 1000 Sidelobe Attenuation");
+title("Frequency Response of M_1 at 50 Sidelobe Attenuation");
 hold off;
 
 che = chebwin(M_2+1,100);%needs to be 1 larger to have same length
@@ -109,6 +109,14 @@ ylabel('Frequency Response')
 title('Frequency Response of Convolved Noise')
 hold off;
 
+figure(200);
+hold on;
+plot(0:length(yz)-1,yz);
+xlabel('Time Index')
+ylabel('Amplitude')
+title('Time Response of Convolved Noise')
+hold off;
+
 y=filter(b,a,noise);
 filter_noise = fftshift(fft(y, num_samples));
 figure(10);
@@ -119,6 +127,13 @@ ylabel('Frequency Response')
 title('Frequency Response of Filtered Noise')
 hold off;
 
+figure(201);
+hold on;
+plot(0:length(y)-1,y);
+xlabel('Time Index')
+ylabel('Amplitude')
+title('Time Response of Filtered Noise')
+hold off;
 
 [b,a] = cheby2(M_2,100,w_n,"low");%needs to be 1 larger to have same length
 
@@ -139,7 +154,13 @@ xlabel('Frequency')
 ylabel('Frequency Response')
 title('Frequency Response of Convolved Noise')
 hold off;
-
+figure(202);
+hold on;
+plot(0:length(yz)-1,yz);
+xlabel('Time Index')
+ylabel('Amplitude')
+title('Time Response of Convolved Noise')
+hold off;
 hold on;
 figure(13)
 plot(t,h);
@@ -158,7 +179,13 @@ ylabel('Frequency Response')
 title('Frequency Response of Filtered Noise')
 hold off;
 
-
+figure(203);
+hold on;
+plot(0:length(y)-1,y);
+xlabel('Time Index')
+ylabel('Amplitude')
+title('Time Response of Filtered Noise')
+hold off;
 [b,a] = cheby2(M_3,100,w_n,"low");%needs to be 1 larger to have same length
 
 
@@ -181,7 +208,13 @@ xlabel('Frequency')
 ylabel('Frequency Response')
 title('Frequency Response of Convolved Noise')
 hold off;
-
+figure(204);
+hold on;
+plot(0:length(yz)-1,yz);
+xlabel('Time Index')
+ylabel('Amplitude')
+title('Time Response of Convolved Noise')
+hold off;
 hold on;
 figure(17)
 plot(t,h);
@@ -198,6 +231,14 @@ plot(w,abs(filter_noise));
 xlabel('Frequency')
 ylabel('Frequency Response')
 title('Frequency Response of Filtered Noise')
+hold off;
+
+figure(205);
+hold on;
+plot(0:length(y)-1,y);
+xlabel('Time Index')
+ylabel('Amplitude')
+title('Time Response of Filtered Noise')
 hold off;
 
 
