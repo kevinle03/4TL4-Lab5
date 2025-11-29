@@ -1,6 +1,6 @@
-clear;
-% Part 1: The truncation method of FIR design
-%% (a) (b) (c) (d)
+%% Part 1: The truncation method of FIR design (a) (b) (c) (d) (e)
+% note: running this will generate over 50 plots
+
 num_samples = 10000;
 w_c = pi/3; % cutoff frequency
 f_c = w_c/(2*pi);
@@ -8,17 +8,23 @@ t_id = 1; % ideal group delay
 w = linspace(0,2*pi,num_samples);
 M_values = [20, 50, 150]; % filter orders
 noise = wgn(1000, 1, 1);
-noise_DFT = fft(noise, num_samples);
-figure;
-plot(w,abs(noise_DFT));
-xlabel('Frequency')
-ylabel('Frequency Response')
-title('Frequency Response of Noise')
+noise_DFT = fft(noise, num_samples); % this gets plotted last
+
 for M = M_values
     N = M + 1; % number of samples
     % design ideal filter
     H_id = exp(-1j*0.5*w*(N-1)); % ideal frequency response
-    H_id(abs(w) > w_c & ) = 0; % set values after w_c to 0
+    H_id(abs(w) > w_c & abs(w) < 2*pi-w_c) = 0; % set values after w_c to 0
+    
+    plot_idx = abs(w) <= pi;
+    w_plot = w(plot_idx);
+
+    figure;
+    plot(w_plot,abs(H_id(plot_idx)));
+    xlabel('Frequency')
+    ylabel('Frequency Response')
+    title(['Ideal Frequency Response of Filter (M = ' num2str(M) ')'])
+
     h_id = ifft(H_id); % ideal impulse response
     % truncation method
     n = 0:N-1;
@@ -31,12 +37,12 @@ for M = M_values
     
     H = fft(h, num_samples); % frequency response of truncated filter
     figure;
-    plot(w,abs(H));
+    plot(w_plot,abs(H(plot_idx)));
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of the Designed Filter (M = ' num2str(M) ')'])
     figure;
-    plot(w,unwrap(angle(H)));
+    plot(w_plot,unwrap(angle(H(plot_idx))));
     xlabel('Frequency')
     ylabel('Phase of Frequency Response')
     title(['Phase of Frequency Response of the Designed Filter (M = ' num2str(M) ')'])
@@ -45,11 +51,13 @@ for M = M_values
     b = firls(M, [0, 1/3, 1/3, 1], [1, 1, 0, 0]); % filter design using firls
     figure;
     freqz(b,1)
+    title(['Frequency Response of the Designed Filter using firls() (M = ' num2str(M) ')'])
+
     % filter noise using conv()
     h_noise = conv(h, noise);
     H_noise = fft(h_noise, num_samples);
     figure;
-    plot(w,abs(H_noise));
+    plot(w_plot,abs(H_noise(plot_idx)));
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using conv() (M = ' num2str(M) ')'])
@@ -62,7 +70,7 @@ for M = M_values
     h_noise = filter(h, 1, noise);
     H_noise = fft(h_noise, num_samples);
     figure;
-    plot(w,abs(H_noise));
+    plot(w_plot,abs(H_noise(plot_idx)));
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using filter() (M = ' num2str(M) ')'])
@@ -73,19 +81,9 @@ for M = M_values
     title(['Time Response of Noise After Filter Using filter() (M = ' num2str(M) ')'])
 end
 
-%%
-clear;
-N = 50+1;
-n = 0:N-1;
-num_samples = 10000;
-w = linspace(-pi,pi,num_samples);
-h_2 = sin(pi*(n-0.5*(N-1))/4)./(pi*(n-0.5*(N-1)));
-H_2 = fft(h_2, num_samples); % frequency response of truncated filter
+% plot of the DFT of noise before filtering
 figure;
-plot(w,abs(H_2));
+plot(w_plot,abs(noise_DFT(plot_idx)));
 xlabel('Frequency')
 ylabel('Frequency Response')
-figure;
-plot(w,unwrap(angle(H_2)));
-xlabel('Frequency')
-ylabel('Phase of Frequency Response')
+title('Frequency Response of Noise')

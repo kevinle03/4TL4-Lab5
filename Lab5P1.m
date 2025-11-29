@@ -6,6 +6,8 @@ w_c = pi/3; % cutoff frequency
 f_c = w_c/(2*pi);
 t_id = 1; % ideal group delay
 w = linspace(0,2*pi,num_samples);
+plot_idx = abs(w) <= pi;
+w_plot = w(plot_idx);
 M_values = [20, 50, 150]; % filter orders
 noise = wgn(1000, 1, 1);
 noise_DFT = fft(noise, num_samples); % this gets plotted last
@@ -17,7 +19,7 @@ for M = M_values
     H_id(abs(w) > w_c & abs(w) < 2*pi-w_c) = 0; % set values after w_c to 0
 
     figure;
-    plot(w,abs(H_id));
+    plot(w_plot,abs(H_id(plot_idx)));
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Ideal Frequency Response of Filter (M = ' num2str(M) ')'])
@@ -34,12 +36,12 @@ for M = M_values
     
     H = fft(h, num_samples); % frequency response of truncated filter
     figure;
-    plot(w,abs(H));
+    plot(w_plot,abs(H(plot_idx)));
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of the Designed Filter (M = ' num2str(M) ')'])
     figure;
-    plot(w,unwrap(angle(H)));
+    plot(w_plot,unwrap(angle(H(plot_idx))));
     xlabel('Frequency')
     ylabel('Phase of Frequency Response')
     title(['Phase of Frequency Response of the Designed Filter (M = ' num2str(M) ')'])
@@ -54,7 +56,7 @@ for M = M_values
     h_noise = conv(h, noise);
     H_noise = fft(h_noise, num_samples);
     figure;
-    plot(w,abs(H_noise));
+    plot(w_plot,abs(H_noise(plot_idx)));
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using conv() (M = ' num2str(M) ')'])
@@ -67,7 +69,7 @@ for M = M_values
     h_noise = filter(h, 1, noise);
     H_noise = fft(h_noise, num_samples);
     figure;
-    plot(w,abs(H_noise));
+    plot(w_plot,abs(H_noise(plot_idx)));
     xlabel('Frequency')
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using filter() (M = ' num2str(M) ')'])
@@ -80,7 +82,7 @@ end
 
 % plot of the DFT of noise before filtering
 figure;
-plot(w,abs(noise_DFT));
+plot(w_plot,abs(noise_DFT(plot_idx)));
 xlabel('Frequency')
 ylabel('Frequency Response')
 title('Frequency Response of Noise')
