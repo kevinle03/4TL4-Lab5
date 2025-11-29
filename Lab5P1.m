@@ -1,5 +1,5 @@
 %% Part 1: The truncation method of FIR design (a) (b) (c) (d) (e)
-% note: running this will generate over 50 plots
+% note: running this will generate 29 plots
 
 num_samples = 10000;
 w_c = pi/3; % cutoff frequency
