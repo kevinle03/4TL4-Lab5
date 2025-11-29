@@ -12,6 +12,19 @@ M_values = [20, 50, 150]; % filter orders
 noise = wgn(1000, 1, 1);
 noise_DFT = fft(noise, num_samples); % this gets plotted last
 
+% plot of the DFT of noise before filtering
+figure;
+plot(w_plot,abs(noise_DFT(plot_idx)));
+xlabel('Frequency')
+ylabel('Frequency Response')
+title('Frequency Response of Noise')
+% time-domain plot of noise before filtering
+figure;
+stem(0:length(noise)-1,noise);
+xlabel('Time Index')
+ylabel('Amplitude')
+title('Time Response of Noise')
+
 for M = M_values
     N = M + 1; % number of samples
     % design ideal filter
@@ -61,7 +74,7 @@ for M = M_values
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using conv() (M = ' num2str(M) ')'])
     figure;
-    plot(0:length(h_noise)-1,h_noise);
+    stem(0:length(h_noise)-1,h_noise);
     xlabel('Time Index')
     ylabel('Amplitude')
     title(['Time Response of Noise After Filter Using conv() (M = ' num2str(M) ')'])
@@ -74,15 +87,8 @@ for M = M_values
     ylabel('Frequency Response')
     title(['Frequency Response of Noise After Filter Using filter() (M = ' num2str(M) ')'])
     figure;
-    plot(0:length(h_noise)-1,h_noise);
+    stem(0:length(h_noise)-1,h_noise);
     xlabel('Time Index')
     ylabel('Amplitude')
     title(['Time Response of Noise After Filter Using filter() (M = ' num2str(M) ')'])
 end
-
-% plot of the DFT of noise before filtering
-figure;
-plot(w_plot,abs(noise_DFT(plot_idx)));
-xlabel('Frequency')
-ylabel('Frequency Response')
-title('Frequency Response of Noise')
